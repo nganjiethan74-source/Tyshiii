@@ -1,2 +1,1 @@
-# Tyshiii
-my read me 
+# Tyshii
