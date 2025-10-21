@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KDA Achievement Hub</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind to use Inter font and custom colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'kda-blue': '#1e40af', // Deep Blue
+                        'kda-light': '#bfdbfe', // Light Blue
+                        'kda-gold': '#f59e0b', // Gold/Amber for highlights
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: url('me.jpg') center center / cover no-repeat;
+            filter: blur(16px);
+            opacity: 0.7;
+        }
+    </style>
+    <!-- Load Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <!-- Custom styles for better aesthetics -->
+    <style>
+        body {
+            background-color: #f8fafc; /* Light gray background */
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+        .achievement-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .achievement-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(76, 64, 64, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .scroll-hidden::-webkit-scrollbar {
+            display: none;
+        }
+        .scroll-hidden {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+    </style>
+</head>
+<body class="flex flex-col">
+
+    <!-- Header and Navigation -->
+    <header class="bg-kda-blue shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-3xl font-bold text-white mb-2 sm:mb-0">KDA Achievement Hub</h1>
+            <nav class="flex space-x-4 text-sm sm:text-base">
+                <button onclick="showPage('achievement-page')" class="nav-button text-white hover:text-kda-gold transition duration-150 font-medium">Achievements</button>
+                <button onclick="showPage('gallery-page')" class="nav-button text-white hover:text-kda-gold transition duration-150 font-medium">Gallery</button>
+                <button onclick="showPage('news-page')" class="nav-button text-white hover:text-kda-gold transition duration-150 font-medium">News</button>
+                <button onclick="showPage('admin-panel')" class="nav-button text-white bg-kda-gold py-1 px-3 rounded-full hover:bg-yellow-600 transition duration-150 text-xs sm:text-sm">Admin</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
+
+        <!-- 1. Achievement Page (Default View) -->
+        <section id="achievement-page" class="page-content">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-8 border-b-4 border-kda-gold pb-2">Student Stars Spotlight</h2>
+
+            <!-- Search and Filter Bar -->
+            <div class="mb-8 p-4 bg-white rounded-xl shadow-md flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+                <input type="text" id="achievement-search" placeholder="Search by student name or achievement..."
+                       class="flex-grow p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-kda-blue transition"
+                       onkeyup="filterAchievements()">
+
+                <select id="achievement-filter"
+                        class="p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-kda-blue bg-white transition"
+                        onchange="filterAchievements()">
+                    <option value="all">All Categories</option>
+                    <option value="Academic">Academic</option>
+                    <option value="Sports">Sports</option>
+                    <option value="Arts">Arts</option>
+                    <option value="Leadership">Leadership</option>
+                </select>
+            </div>
+
+            <!-- Achievements Grid -->
+            <div id="achievements-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Achievement Cards will be inserted here by JavaScript -->
+            </div>
+        </section>
+
+        <!-- 2. Photo and Video Gallery -->
+        <section id="gallery-page" class="page-content hidden">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-8 border-b-4 border-kda-gold pb-2">Moments of Glory</h2>
+            <p class="text-gray-600 mb-6">A visual celebration of KDA students in action. From winning moments to inspiring performances.</p>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Photo Gallery Items -->
+                <div class="relative w-full aspect-square rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition duration-300">
+                    <img src="https://placehold.co/400x400/1e40af/ffffff?text=Sports+Win" alt="Sports Team Celebration" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 hover:opacity-100 transition duration-300">
+                        <span class="text-white font-bold text-center p-2">Basketball Championship</span>
+                    </div>
+                </div>
+                <div class="relative w-full aspect-square rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition duration-300">
+                    <img src="https://placehold.co/400x400/f59e0b/000000?text=Science+Fair" alt="Science Fair Winner" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 hover:opacity-100 transition duration-300">
+                        <span class="text-white font-bold text-center p-2">State Science Winner</span>
+                    </div>
+                </div>
+                <div class="relative w-full aspect-square rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition duration-300">
+                    <img src="https://placehold.co/400x400/10b981/ffffff?text=Art+Exhibition" alt="Art Exhibition" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 hover:opacity-100 transition duration-300">
+                        <span class="text-white font-bold text-center p-2">Art Gala Showcase</span>
+                    </div>
+                </div>
+                <div class="relative w-full aspect-square rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition duration-300">
+                    <img src="me.jpg" alt="Smartest"
+                    class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 hover:opacity-100 transition duration-300">
+                        <span class="text-white font-bold text-center p-2">Student Council Retreat</span>
+                    </div>
+                </div>
+                <!-- Video Gallery Placeholder (embed if available, using placeholder here) -->
+                <div class="relative w-full aspect-video col-span-2 md:col-span-4 rounded-xl overflow-hidden shadow-xl">
+                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=c1o8r0yV8d9j0j4u"
+                            title="YouTube video player placeholder" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen class="w-full h-full"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. News and Updates -->
+        <section id="news-page" class="page-content hidden">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-8 border-b-4 border-kda-gold pb-2">Latest Updates</h2>
+
+            <div class="space-y-6">
+                <!-- News Item 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-kda-blue">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Principal's Honor Roll Announced</h3>
+                    <p class="text-sm text-gray-500 mb-3">Published: October 15, 2025</p>
+                    <p class="text-gray-700">Congratulations to the 150 students who achieved a 4.0 GPA last quarter! Their dedication to academic excellence sets a high standard for our entire school community. See the full list on the Academic notice board.</p>
+                </div>
+                <!-- News Item 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-kda-gold">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Annual Art Gala was a Resounding Success</h3>
+                    <p class="text-sm text-gray-500 mb-3">Published: October 10, 2025</p>
+                    <p class="text-gray-700">The KDA Arts Department hosted a spectacular gala, raising funds for new studio equipment. Student artists showcased incredible talent in sculpture, painting, and digital media. Well done to all participants!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Admin Panel (Simple Add Achievement UI) -->
+        <section id="admin-panel" class="page-content hidden max-w-2xl mx-auto">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-8 border-b-4 border-red-500 pb-2 text-red-600">Admin Panel (Add Achievement)</h2>
+            <p class="text-gray-600 mb-6">Use this panel to submit new student achievements for public display.</p>
+
+            <div id="admin-message-box" class="hidden p-4 mb-4 text-sm rounded-lg" role="alert"></div>
+
+            <form id="add-achievement-form" class="bg-white p-6 sm:p-8 rounded-xl shadow-xl space-y-4">
+
+                <div>
+                    <label for="admin-student-name" class="block text-sm font-medium text-gray-700">Student Name</label>
+                    <input type="text" id="admin-student-name" required
+                           class="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:border-kda-blue focus:ring-kda-blue">
+                </div>
+
+                <div>
+                    <label for="admin-title" class="block text-sm font-medium text-gray-700">Achievement Title</label>
+                    <input type="text" id="admin-title" required
+                           class="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:border-kda-blue focus:ring-kda-blue">
+                </div>
+
+                <div>
+                    <label for="admin-category" class="block text-sm font-medium text-gray-700">Category</label>
+                    <select id="admin-category" required
+                            class="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:border-kda-blue focus:ring-kda-blue bg-white">
+                        <option value="Academic">Academic</option>
+                        <option value="Sports">Sports</option>
+                        <option value="Arts">Arts</option>
+                        <option value="Leadership">Leadership</option>
+                        <option value="Community">Community Service</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="admin-description" class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea id="admin-description" rows="3" required
+                              class="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:border-kda-blue focus:ring-kda-blue"></textarea>
+                </div>
+
+                <button type="submit" id="admin-submit-button"
+                        class="w-full py-3 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-kda-blue hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-kda-blue transition duration-150">
+                    Submit Achievement
+                </button>
+                <p class="text-xs text-gray-400 mt-2 text-center">Note: Data submission requires successful Firebase initialization.</p>
+            </form>
+        </section>
+
+        <!-- 5. Student Profile Modal (Hidden by default) -->
+        <div id="profile-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 hidden items-center justify-center z-[100] p-4" onclick="hideProfileModal(event)">
+            <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+                <div class="flex justify-between items-center p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
+                    <h3 id="modal-student-name" class="text-3xl font-bold text-kda-blue"></h3>
+                    <button onclick="hideProfileModal()" class="text-gray-500 hover:text-gray-800 text-3xl font-light">&times;</button>
+                </div>
+                <div class="p-6">
+                    <div id="modal-profile-header" class="mb-6 flex items-center space-x-4">
+                        <img id="modal-profile-img" src="https://placehold.co/100x100/1e40af/ffffff?text=KDA" alt="Profile Picture" class="w-24 h-24 rounded-full object-cover border-4 border-kda-gold">
+                        <div>
+                            <p id="modal-grade" class="text-xl text-gray-600 font-semibold"></p>
+                            <p id="modal-house" class="text-md text-gray-500"></p>
+                        </div>
+                    </div>
+
+                    <h4 class="text-2xl font-semibold text-gray-900 mb-4 border-b pb-1">All Recognitions</h4>
+                    <div id="modal-achievement-list" class="space-y-4 scroll-hidden">
+                        <!-- Detailed list of achievements for the student will be rendered here -->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6 mt-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm">
+            <p>&copy; 2025 KDA. All Rights Reserved. Empowering Excellence.</p>
+            <p id="footer-user-id" class="mt-1 text-xs text-gray-400">User ID: Loading...</p>
+        </div>
+    </footer>
+
+    <!-- Firebase and Application Logic -->
+    <script type="module">
+        // Import necessary Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, getDocs, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global Firebase Configuration Variables (MANDATORY)
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-kda-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // Global Application State
+        let app, db, auth;
+        let userId = null;
+        let allAchievements = [];
+        let isAuthReady = false;
+
+        // --- Firebase Setup and Authentication ---
+        async function setupFirebase() {
+            if (!firebaseConfig) {
+                console.error("Firebase config is missing. Cannot initialize Firebase.");
+                userId = crypto.randomUUID(); // Fallback UUID for mock mode
+                document.getElementById('footer-user-id').textContent = `User ID (Mock): ${userId}`;
+                isAuthReady = true;
+                return;
+            }
+
+            try {
+                // Set log level for debugging
+                setLogLevel('Debug');
+
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                // Sign in logic
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                // Wait for auth state change
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        document.getElementById('footer-user-id').textContent = `User ID: ${userId}`;
+                        console.log("Firebase initialized and user signed in:", userId);
+                        isAuthReady = true;
+                        // Once authenticated, start listening to data
+                        listenForAchievements();
+                    } else {
+                        userId = crypto.randomUUID(); // Fallback if auth somehow fails
+                        document.getElementById('footer-user-id').textContent = `User ID (Anon/Error): ${userId}`;
+                        isAuthReady = true;
+                        console.log("User logged out or anonymous sign-in failed.");
+                    }
+                });
+
+            } catch (error) {
+                console.error("Firebase initialization or authentication failed:", error);
+                userId = crypto.randomUUID();
+                document.getElementById('footer-user-id').textContent = `User ID (Error): ${userId}`;
+                isAuthReady = true;
+            }
+        }
+
+
+        // --- Firestore Data Listener (Public Data) ---
+        function listenForAchievements() {
+            if (!db || !isAuthReady) return;
+
+            // Define the public collection path for shared achievements
+            const achievementsColRef = collection(db, 'artifacts', appId, 'public', 'data', 'achievements');
+
+            // Set up a real-time listener
+            onSnapshot(achievementsColRef, (snapshot) => {
+                const fetchedAchievements = [];
+                snapshot.forEach((doc) => {
+                    fetchedAchievements.push({ id: doc.id, ...doc.data() });
+                });
+                
+                // Sort by date (newest first, if timestamp exists)
+                allAchievements = fetchedAchievements.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+                
+                console.log("Achievements updated from Firestore. Count:", allAchievements.length);
+                renderAchievements(allAchievements); // Re-render the grid
+            }, (error) => {
+                console.error("Error listening to achievements:", error);
+                // Fallback to mock data if Firestore connection fails after setup
+                if (allAchievements.length === 0) {
+                     allAchievements = mockAchievements;
+                     renderAchievements(allAchievements);
+                }
+            });
+        }
+
+
+        // --- Mock Data (Used before Firestore loads or as a fallback) ---
+        const mockAchievements = [
+            { id: 'm1', studentName: 'Nganji Ethan', title: 'National Math Olympiad Gold', category: 'Academic', description: 'Won the gold medal in the senior category after two rigorous rounds of competition.', date: '2025-10-10', grade: 'Grade 12', house: 'Jupiter' },
+            { id: 'm2', studentName: 'Rugerinyange David ', title: 'Varsity Soccer MVP', category: 'Sports', description: 'Voted Most Valuable Player after leading the team to the regional championship title.', date: '2025-09-28', grade: 'Grade 11', house: 'Mars' },
+            { id: 'm3', studentName: 'Maniraguha Emmy', title: 'District Art Showcase Winner', category: 'Arts', description: 'His oil painting "KDA Spirit" won first place in the secondary school category.', date: '2025-10-05', grade: 'Grade 9', house: 'Saturn' },
+            { id: 'm4', studentName: 'Ntarindwa Bryan', title: 'Student Council President', category: 'Leadership', description: 'Elected to serve as the Student Council President for the 2025-2026 school year.', date: '2025-09-15', grade: 'Grade 12', house: 'Venus' },
+            { id: 'm5', studentName: 'Rwabuneza Nick', title: 'Debate Club State Finalist', category: 'Academic', description: 'Reached the state finals in the policy debate tournament.', date: '2025-05-20', grade: 'Grade 12', house: 'Jupiter' },
+            { id: 'm6', studentName: 'Ntwali Gedeon', title: 'Community Clean-Up Lead', category: 'Community', description: 'Organized and led a successful weekend community clean-up drive.', date: '2025-08-01', grade: 'Grade 10', house: 'Mars' },
+        ];
+
+
+        // --- Core Application Functions ---
+
+        // Function to render achievement cards in the grid
+        function renderAchievements(achievements) {
+            const grid = document.getElementById('achievements-grid');
+            grid.innerHTML = ''; // Clear existing content
+
+            if (achievements.length === 0) {
+                grid.innerHTML = '<p class="col-span-full text-center text-xl text-gray-500 p-8">No achievements found matching your criteria. Be the first to add one!</p>';
+                return;
+            }
+
+            achievements.forEach(ach => {
+                // Determine icon and color based on category
+                let icon = '';
+                let colorClass = 'text-gray-600 bg-gray-100';
+                switch (ach.category) {
+                    case 'Academic':
+                        icon = '';
+                        colorClass = 'text-kda-blue bg-kda-light';
+                        break;
+                    case 'Sports':
+                        icon = '🏅';
+                        colorClass = 'text-green-700 bg-green-100';
+                        break;
+                    case 'Arts':
+                        icon = '🎨';
+                        colorClass = 'text-purple-700 bg-purple-100';
+                        break;
+                    case 'Leadership':
+                        icon = '🌟';
+                        colorClass = 'text-kda-gold bg-yellow-100';
+                        break;
+                    default:
+                        icon = '✨';
+                }
+
+                const card = `
+                    <div class="achievement-card bg-white rounded-xl shadow-lg p-6 flex flex-col justify-between cursor-pointer border-t-4 border-kda-blue"
+                         onclick="showStudentProfile('${ach.studentName}', '${ach.grade || ''}', '${ach.house || ''}')">
+                        <div>
+                            <div class="flex items-center space-x-3 mb-3">
+                                <span class="text-3xl">${icon}</span>
+                                <span class="px-3 py-1 text-sm font-semibold rounded-full ${colorClass}">
+                                    ${ach.category}
+                                </span>
+                            </div>
+                            <h3 class="text-xl font-extrabold text-gray-900 mb-2">${ach.title}</h3>
+                            <p class="text-sm text-gray-700 line-clamp-3">${ach.description}</p>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between items-center">
+                            <p class="text-lg font-bold text-kda-blue">${ach.studentName}</p>
+                            <span class="text-xs text-gray-400">${ach.date || ach.timestamp ? new Date(ach.timestamp?.seconds * 1000 || ach.date).toLocaleDateString() : 'N/A'}</span>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += card;
+            });
+        }
+
+        // Function to filter achievements based on search and category
+        window.filterAchievements = function() {
+            const searchTerm = document.getElementById('achievement-search').value.toLowerCase();
+            const category = document.getElementById('achievement-filter').value;
+
+            const filtered = allAchievements.filter(ach => {
+                const nameMatch = ach.studentName.toLowerCase().includes(searchTerm);
+                const titleMatch = ach.title.toLowerCase().includes(searchTerm);
+                const categoryMatch = category === 'all' || ach.category === category;
+
+                return (nameMatch || titleMatch) && categoryMatch;
+            });
+
+            renderAchievements(filtered);
+        }
+
+        // Function to switch visible page
+        window.showPage = function(pageId) {
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.add('hidden');
+            });
+            document.getElementById(pageId).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+
+        // Function to show the student profile modal (simplistic profile based on mock data)
+        window.showStudentProfile = function(studentName, grade, house) {
+            // Find all achievements for the selected student
+            const studentAchievements = allAchievements.filter(ach => ach.studentName === studentName);
+
+            if (studentAchievements.length === 0) {
+                // If this is an achievement from a different student/mock data, this might happen
+                console.warn(`No full profile data found for ${studentName}`);
+                return;
+            }
+
+            // Populate Modal Header
+            document.getElementById('modal-student-name').textContent = studentName;
+            document.getElementById('modal-grade').textContent = grade ? `Grade: ${grade}` : 'Grade: N/A';
+            document.getElementById('modal-house').textContent = house ? `House: ${house}` : 'House: N/A';
+            document.getElementById('modal-profile-img').src = `https://placehold.co/100x100/1e40af/ffffff?text=${studentName.split(' ')[0][0]}${studentName.split(' ').length > 1 ? studentName.split(' ')[1][0] : ''}`;
+
+            // Populate Achievement List
+            const achievementList = document.getElementById('modal-achievement-list');
+            achievementList.innerHTML = studentAchievements.map(ach => `
+                <div class="p-4 border-l-4 border-kda-gold bg-gray-50 rounded-lg">
+                    <div class="flex justify-between items-start">
+                        <h5 class="text-lg font-semibold text-gray-800">${ach.title}</h5>
+                        <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-kda-light text-kda-blue">${ach.category}</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-1">${ach.description}</p>
+                    <p class="text-xs text-gray-400 mt-2">Date: ${ach.date || ach.timestamp ? new Date(ach.timestamp?.seconds * 1000 || ach.date).toLocaleDateString() : 'N/A'}</p>
+                </div>
+            `).join('');
+
+            document.getElementById('profile-modal').classList.remove('hidden');
+            document.getElementById('profile-modal').classList.add('flex');
+        }
+
+        window.hideProfileModal = function(event) {
+            // Only hide if the click was on the overlay or the close button
+            if (!event || event.target.id === 'profile-modal') {
+                document.getElementById('profile-modal').classList.add('hidden');
+                document.getElementById('profile-modal').classList.remove('flex');
+            }
+        }
+
+        // --- Admin Panel (Firestore Write Functionality) ---
+        document.getElementById('add-achievement-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('admin-submit-button');
+            const messageBox = document.getElementById('admin-message-box');
+            
+            messageBox.classList.add('hidden');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            if (!db) {
+                showMessage('error', 'Database not initialized. Cannot submit achievement.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Achievement';
+                return;
+            }
+
+            const newAchievement = {
+                studentName: document.getElementById('admin-student-name').value.trim(),
+                title: document.getElementById('admin-title').value.trim(),
+                category: document.getElementById('admin-category').value,
+                description: document.getElementById('admin-description').value.trim(),
+                grade: 'N/A', // Placeholder for simplification
+                house: 'N/A', // Placeholder for simplification
+                date: new Date().toISOString().split('T')[0],
+                timestamp: serverTimestamp(),
+                submittedBy: userId,
+            };
+
+            try {
+                const achievementsColRef = collection(db, 'artifacts', appId, 'public', 'data', 'achievements');
+                await addDoc(achievementsColRef, newAchievement);
+                
+                showMessage('success', `Success! Achievement for ${newAchievement.studentName} submitted and will appear shortly.`);
+                document.getElementById('add-achievement-form').reset();
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                showMessage('error', `Submission failed. Error: ${error.message}`);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Achievement';
+            }
+        });
+
+        function showMessage(type, message) {
+            const box = document.getElementById('admin-message-box');
+            box.textContent = message;
+            box.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700');
+
+            if (type === 'success') {
+                box.classList.add('bg-green-100', 'text-green-700');
+            } else if (type === 'error') {
+                box.classList.add('bg-red-100', 'text-red-700');
+            }
+        }
+
+
+        // --- Initialization ---
+        window.onload = function() {
+            // Start Firebase setup
+            setupFirebase();
+            
+            // Render initial mock data while waiting for Firebase listener to populate 'allAchievements'
+            allAchievements = mockAchievements;
+            renderAchievements(allAchievements);
+        }
+
+    </script>
+</body>
+</html>
